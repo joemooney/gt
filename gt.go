@@ -5,6 +5,7 @@ import (
 	"jpm/gt/cmds"
 )
 
+// 
 //go:generate go run generate/gen__cmd.go
 
 // Each source file can have an init funciton

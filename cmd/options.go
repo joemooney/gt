@@ -51,7 +51,7 @@ var Commands = make(map[string]CmdDef)
 // AddCmdDef add command to list of registered commands
 func AddCmdDef(cmd CmdDef) CmdDef {
 	Commands[cmd.CmdName] = cmd
-	fmt.Printf("Defined %v\n", cmd)
+	//fmt.Printf("options.go|AddCmdDef|Defined %v\n", cmd)
 	return cmd
 }
 
@@ -59,7 +59,7 @@ func AddCmdDef(cmd CmdDef) CmdDef {
 func NewCmdDef(CmdName string, CmdOpts CmdOpts, CmdArgs CmdArgs) CmdDef {
 	cmd := CmdDef{CmdName, CmdOpts, CmdArgs}
 	Commands[CmdName] = cmd
-	fmt.Printf("Defined %v\n", cmd)
+	//fmt.Printf("options.go|NewCmdDef|Defined %v\n", cmd)
 	return cmd
 }
 
@@ -67,6 +67,7 @@ func NewCmdDef(CmdName string, CmdOpts CmdOpts, CmdArgs CmdArgs) CmdDef {
 func IntArg(cmdDef CmdDef, val string, idx int) int {
 	i, err := strconv.Atoi(val)
 	if err != nil {
+		fmt.Printf("idx=%v args=%v", idx, cmdDef.CmdArgs)
 		log.Fatal("Invalid integer value " + val + " for arg " + cmdDef.CmdArgs[idx].Var + " in command " + cmdDef.CmdName)
 	}
 	return i
@@ -90,7 +91,7 @@ func CheckOpts(args []string, cmdDef CmdDef, xv reflect.Value, xt reflect.Type) 
 	//xv := reflect.ValueOf(&outOpts).Elem() // Dereference into addressable value
 	//xt := xv.Type()                        // Now get the type of the value object
 
-	fmt.Println("here")
+	//fmt.Println("options.go|CheckOpts|here")
 	for i := 0; i < xt.NumField(); i++ {
 		f := xt.Field(i) // get the field
 

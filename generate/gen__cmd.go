@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func printDef(path, funcName, def string) {
+func printDef(path, funcName, def string) string {
 	re := regexp.MustCompile(`(?m)^`)
 	//fmt.Println("<<<" + def + ">>>")
 	def = re.ReplaceAllString(strings.TrimRight(def, " \t\n\r"), "\t")
@@ -33,30 +33,41 @@ var %[1]sCmdDef = NewCmdDef(
 
 // Cmd%[1]sOpts is the list of options available for the command 
 type Cmd%[1]sOpts struct {
+%[4]s
 }
 
-// %[1]sCaller(args []string) int {
-	cmd := Commands["%[1]s"]
+// %[1]sCaller helper command to call function
+func %[1]sCaller(args []string) int {
+	cmdDef := cmddef.Commands["%[1]s"]
 	o := Cmd%[1]sOpts{}
 	xv := reflect.ValueOf(&o).Elem()     // Dereference into addressable value
 	xt := xv.Type()                      // Now get the type of the value object
-	idx1 := checkOpts(args, cmd, xv, xt) // idx1 is the offset of the first argument after the options
-	arg1 := intArg(cmd, args[idx1], 1)
+	idx1 := cmddef.checkOpts(args, cmdDef, xv, xt) // idx1 is the offset of the first argument after the options
+	arg1 := cmddef.IntArg(cmd, args[idx1], 0)
 	return %[1]s(arg1, o)	
 }
 `
-	fmt.Printf(x, funcName, path, def)
+	out := fmt.Sprintf(x, funcName, path, def, opts)
+	return out
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
 }
 
 func main() {
-	dir := "./cmd"
+	dir := "./cmds"
 	files, _ := ioutil.ReadDir(dir)
 	inComment := false
 	inDef := false
 	def := ""
 	funcName := ""
+	output := ""
 	for _, f := range files {
 		path := dir + "/" + f.Name()
+		fmt.Printf("[generate] Reading %v\n", path)
 		for l := range util.Readlines(path) {
 			t := strings.TrimSpace(l)
 			switch {
@@ -80,7 +91,9 @@ func main() {
 			case inDef:
 				if util.Endswith(t, "*/") {
 					inDef = false
-					printDef(path, funcName, def)
+					out := printDef(path, funcName, def)
+					output += out
+					fmt.Print(out)
 				} else {
 					def += l + "\n"
 				}

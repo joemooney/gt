@@ -13,5 +13,10 @@ CmdArgs: [{bar, int}]
 */
 func Foo(bar int, o CmdFooOpts) int {
 	fmt.Printf("bar=%d age=%d name=%s\n", bar, o.Age, o.Name)
+	rebar()
 	return o.Age
+}
+
+func rebar() {
+	fmt.Printf("joe was here\n")
 }

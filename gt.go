@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"jpm/gt/cmds"
+	"os"
 )
 
-// 
+//
 //go:generate go run generate/gen__cmd.go
 
 // Each source file can have an init funciton
-// this is called after all varialb declartions in the package
+// this is called after all variable declartions in the package
 // have evaluated their initializers which is after all imported
 // packages have been initialized
 func init() {
@@ -24,7 +25,7 @@ func main() {
 	//fmt.Println("hello world long:", optDetailedOutput)
 	//fmt.Println("hello world user:", optUser)
 
-	fmt.Println("hello my flags")
+	//fmt.Println("gt.go|main|enter")
 
 	//fs := flag.NewFlagSet("flags for foo",flag.PanicOnError)
 	//fs := flag.NewFlagSet("ctx foo", flag.ContinueOnError)
@@ -34,14 +35,18 @@ func main() {
 	//foo := fs.Parse(args)
 	//fmt.Println(foo)
 	//args := []string{"--zip", "85260", "--age", "99"}
-	args := []string{"--age", "99", "77"}
+	//args := []string{"--age", "99", "77"}
+	//args := []string{"--age", "99", "77"}
+	//cmds.FooCaller(args)
+
+	args := os.Args[1:]
+	fmt.Printf("args: %v\n", args)
+	cmds.FooCaller(args)
 
 	//opts := o.NewCmdHero(args)
 	//fmt.Printf("%v is prime? %v\n",23,IsPrime(23))
 
-	cmds.FooCaller(args)
-
-	cmds.DumpDef()
+	//cmds.DumpDef()
 
 	//var def1 CommandDef
 	//def1.help = "foo"
